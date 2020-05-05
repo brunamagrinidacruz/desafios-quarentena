@@ -1,18 +1,23 @@
 class Player {
-    constructor(_name, _totalHp, _hp, _attacks, _elementHealthBar) {
-        this.name = _name;
-        this.totalHp = _totalHp;
-        this.hp = _hp;
-        this.attacks = _attacks;
-        this.elementHealthBar = _elementHealthBar;
+    constructor(name, type, totalHp, hp, attacks, elementHealthBar) {
+        this.name = name;
+        this.type = type;
+        this.totalHp = totalHp;
+        this.hp = hp;
+        this.attacks = attacks;
+        this.elementHealthBar = elementHealthBar;
     }
 
-    getAttack(_name) {
-        return this.attacks[_name];
+    getAttack(name) {
+        return this.attacks[name];
     }
 
     getHp() {
         return this.hp;
+    }
+
+    getType() {
+        return this.type;
     }
 
     //Choose a attack randomly
@@ -33,8 +38,8 @@ class Player {
         return (this.hp === 0);
     }
 
-    attackOpponent(attack, opponent) {
-        const gameIsOver = opponent.updatePlayerHp(opponent.getHp() - attack.power);
+    attackOpponent(opponent, attack, bonus = 0) {
+        const gameIsOver = opponent.updatePlayerHp(opponent.getHp() - (attack.power + bonus));
         return gameIsOver;
     }
 

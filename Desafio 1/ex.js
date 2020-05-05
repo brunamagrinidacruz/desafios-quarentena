@@ -3,56 +3,56 @@ const playerAttacks = {
     power: 40,
     accuracy: 100,
     name: 'Reprovação em Cálculo',
-    type: 'electric',
+    type: NORMAL,
   },
-  aulaDoMello: {
+  aguaNoPC: {
     power: 40,
     accuracy: 100,
-    name: 'Aula do Mello',
-    type: 'normal',
+    name: 'Jogar água no PC do amiguinho',
+    type: WATER,
   },
   segmentationFault: {
     power: 80,
     accuracy: 70,
     name: 'Segmentation Fault',
-    type: 'electric',
+    type: ELETRIC,
   },
   transformarEmMembroDoGema: {
     power: 110,
     accuracy: 80,
     name: 'Transformar em membro do GEMA',
-    type: 'fighting',
+    type: ELETRIC,
   }
 }
-let player = new Player("Loro José", 274, 274, playerAttacks, document.getElementById('player-health'));
+let player = new Player("Loro José", ELETRIC, 274, 274, playerAttacks, document.getElementById('player-health'));
 
 const opponentAttacks = {
   cometa: {
     power: 40,
     accuracy: 100,
     name: 'Cometa',
-    type: 'normal',
+    type: ROCK,
   },
-  bubble: {
+  tsunami: {
     power: 40,
     accuracy: 100,
-    name: 'Bubble',
-    type: 'water',
+    name: 'Tsunami',
+    type: WATER,
   },
-  waterGun: {
+  rugido: {
     power: 40,
     accuracy: 100,
-    name: 'Water Gun',
-    type: 'water',
+    name: 'Rugido',
+    type: FIGHTING,
   },
-  hydroPump: {
+  eraDoGelo: {
     power: 110,
     accuracy: 80,
-    name: 'Hydro Pump',
-    type: 'water',
+    name: 'Era do Gelo',
+    type: ICE,
   }
 }
-let opponent = new Player("Dr. Sérgio", 292, 292, opponentAttacks, document.getElementById('opponent-health'));
+let opponent = new Player("Dr. Sérgio", ROCK, 292, 292, opponentAttacks, document.getElementById('opponent-health'));
 
 const turnText = document.getElementById('text');
 let isTurnHappening = false;
@@ -78,13 +78,15 @@ function turn(playerChosenAttack) {
 
   let gameIsOver;
   let canAttack;
+  let bonusAttack;
 
   // Update HTML text with the used attack
   turnText.innerText = `${player.name} usou ${playerChosenAttack.name}`;
 
   canAttack = player.canAttack(playerChosenAttack.accuracy);
   if(canAttack) {
-    gameIsOver = player.attackOpponent(playerChosenAttack, opponent);
+    bonusAttack = pickBonusAttack(playerChosenAttack.type, opponent.getType());
+    gameIsOver = player.attackOpponent(opponent, playerChosenAttack, bonusAttack);
     if(gameIsOver) gameOver(player.name)
   } else {
     // Update HTML text in case the attack misses
@@ -103,7 +105,8 @@ function turn(playerChosenAttack) {
     //Check if the opponent can or can not attack
     canAttack = opponent.canAttack(opponentAttack.accuracy);
     if(canAttack) {
-      gameIsOver = opponent.attackOpponent(opponentAttack, player);
+      bonusAttack = pickBonusAttack(opponentAttack.type, player.getType());
+      gameIsOver = opponent.attackOpponent(player, opponentAttack, bonusAttack);
       if(gameIsOver) gameOver(opponent.name)
     } else {
       // Update HTML text in case the attack misses
@@ -124,7 +127,7 @@ document.getElementById('attack1-button').addEventListener('click', function() {
   turn(player.getAttack('reprovacaoEmCalculo'));
 });
 document.getElementById('attack2-button').addEventListener('click', function() {
-  turn(player.getAttack('aulaDoMello'));
+  turn(player.getAttack('aguaNoPC'));
 });
 document.getElementById('attack3-button').addEventListener('click', function() {
   turn(player.getAttack('segmentationFault'));
