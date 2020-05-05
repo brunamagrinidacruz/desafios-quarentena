@@ -114,6 +114,9 @@ function updateOpponentHp(newHP) {
 // otherwise update opponents health and return true
 // *************************************************************************************
 function playerAttack(attack) {
+  if(willAttackMiss(attack.accuracy)) return false;
+  updateOpponentHp(opponentHp - attack.power);
+  return true;
   // 0: return false if attack misses
   // 1: otherwise update opponents health and return true
 }
@@ -127,8 +130,10 @@ function playerAttack(attack) {
 
 // opponent attack function that receives the used attack
 function opponentAttack(attack) {
+  if(willAttackMiss(attack.accuracy)) return false;
+  updatePlayerHp(playerHp - attack.power);
+  return true;
   // 0: return false if attack misses
-  
   // 1: otherwise update player health and return true
 }
 
