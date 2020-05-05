@@ -1,15 +1,23 @@
 class Player {
-    constructor(name, type, totalHp, hp, attacks, elementHealthBar) {
+    constructor(name, type, totalHp, hp, elementHealthBar) {
         this.name = name;
         this.type = type;
         this.totalHp = totalHp;
         this.hp = hp;
-        this.attacks = attacks;
+        this.attacks = {};
         this.elementHealthBar = elementHealthBar;
     }
 
     getAttack(name) {
         return this.attacks[name];
+    }
+
+    getAttacks() {
+        return this.attacks;
+    }
+
+    setAttack(attack) {
+        this.attacks[attack.id] = attack; 
     }
 
     getHp() {

@@ -10,12 +10,12 @@ let attackRock = {};
 let attackIce = {};
 
 //Initializing to 0 each bonus
-initializeBonusAttack(attackEletric);
-initializeBonusAttack(attackWater);
-initializeBonusAttack(attackNormal);
-initializeBonusAttack(attackFighting);
-initializeBonusAttack(attackRock);
-initializeBonusAttack(attackIce);
+initializeAttack(attackEletric);
+initializeAttack(attackWater);
+initializeAttack(attackNormal);
+initializeAttack(attackFighting);
+initializeAttack(attackRock);
+initializeAttack(attackIce);
 
 //Initializing that the attack of type ELETRIC will have a bonus of 5 when the opponent is type WATER
 attackEletric[WATER] = {
@@ -33,7 +33,7 @@ attackNormal[ROCK] = {
 }
 
 //Initializing that every type will have a bonus 0
-function initializeBonusAttack(attack) {
+function initializeAttack(attack) {
     ALL.map((type) => {
         attack[type] = {
             bonus: 0

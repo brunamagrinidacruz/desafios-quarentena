@@ -1,61 +1,24 @@
-const playerAttacks = {
-  reprovacaoEmCalculo: {
-    power: 40,
-    accuracy: 100,
-    name: 'Reprovação em Cálculo',
-    type: NORMAL,
-  },
-  aguaNoPC: {
-    power: 40,
-    accuracy: 100,
-    name: 'Jogar água no PC do amiguinho',
-    type: WATER,
-  },
-  segmentationFault: {
-    power: 80,
-    accuracy: 70,
-    name: 'Segmentation Fault',
-    type: ELETRIC,
-  },
-  transformarEmMembroDoGema: {
-    power: 110,
-    accuracy: 80,
-    name: 'Transformar em membro do GEMA',
-    type: ELETRIC,
-  }
-}
-let player = new Player("Loro José", ELETRIC, 274, 274, playerAttacks, document.getElementById('player-health'));
+let url = new URL(window.location.href);
 
-const opponentAttacks = {
-  cometa: {
-    power: 40,
-    accuracy: 100,
-    name: 'Cometa',
-    type: ROCK,
-  },
-  tsunami: {
-    power: 40,
-    accuracy: 100,
-    name: 'Tsunami',
-    type: WATER,
-  },
-  rugido: {
-    power: 40,
-    accuracy: 100,
-    name: 'Rugido',
-    type: FIGHTING,
-  },
-  eraDoGelo: {
-    power: 110,
-    accuracy: 80,
-    name: 'Era do Gelo',
-    type: ICE,
-  }
-}
-let opponent = new Player("Dr. Sérgio", ROCK, 292, 292, opponentAttacks, document.getElementById('opponent-health'));
+let player = new Player("Loro José", ELETRIC, 274, 274, document.getElementById('player-health'));
+attachAttackToPlayer(player, 'reprovacaoEmCalculo');
+attachAttackToPlayer(player, 'aguaNoPC');
+attachAttackToPlayer(player, 'segmentationFault');
+attachAttackToPlayer(player, 'transformarEmMembroDoGema');
+
+let opponent = new Player("Dr. Sérgio", ROCK, 292, 292, document.getElementById('opponent-health'));
+attachAttackToPlayer(opponent, 'cometa');
+attachAttackToPlayer(opponent, 'tsunami');
+attachAttackToPlayer(opponent, 'rugido');
+attachAttackToPlayer(opponent, 'eraDoGelo');
 
 const turnText = document.getElementById('text');
 let isTurnHappening = false;
+let round = url.searchParams.get("round") == null ? 1 : url.searchParams.get("round");
+if(round > 1) {
+  upgradePlayer(round, player);
+  upgradePlayer(round, opponent);
+}
 
 function gameOver (winner) {
   // Wait 1000 (Health loss animation)
@@ -64,8 +27,10 @@ function gameOver (winner) {
     turnText.innerText = `${winner} ${isTheWinner}`;
     // Open alert with the winner
     alert(`${winner} ${isTheWinner} ${closeThisAlertToPlayAgain}`);
-    // Reload the game
-    window.location.reload();
+    
+    // Reload the game passing the round
+    url.searchParams.set('round', parseInt(round)+1);
+    window.location.href = url.href;
   }, 1000);
 }
 
