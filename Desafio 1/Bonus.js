@@ -29,7 +29,7 @@ attackRock[WATER] = {
     bonus: 5
 }
 attackNormal[ROCK] = {
-    bonus: 100
+    bonus: 30
 }
 
 //Initializing that every type will have a bonus 0

@@ -6,7 +6,16 @@ class Player {
         this.hp = hp;
         this.elementHealthBar = elementHealthBar;
         this.image = image;
+        this.paralized = 0;
         this.attacks = {};
+    }
+
+    setParalized(countRounds) {
+        this.paralized = countRounds;
+    }
+
+    getParalized() {
+        return this.paralized;
     }
 
     getImage(index) {
@@ -56,6 +65,7 @@ class Player {
     }
 
     attackOpponent(opponent, attack, bonus = 0) {
+        scanProperties(attack.properties, opponent);
         const gameIsOver = opponent.updatePlayerHp(opponent.getHp() - (attack.power + bonus));
         return gameIsOver;
     }

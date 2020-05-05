@@ -30,10 +30,13 @@ const ATTACKS = {
         },
         reprovacaoEmCalculo: {
             id: 'reprovacaoEmCalculo',
-            power: 80,
+            power: 40,
             accuracy: 40,
             name: 'Reprovação em Cálculo',
             type: NORMAL,
+            properties: {
+              paralized: 2
+            },
           },
           aguaNoPC: {
             id: 'aguaNoPC',
