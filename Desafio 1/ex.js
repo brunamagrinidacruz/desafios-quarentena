@@ -61,9 +61,9 @@ function gameOver (winner) {
   // Wait 1000 (Health loss animation)
   setTimeout(() => {
     // Update HTML text with the winner
-    turnText.innerText = winner + ' is the winner!';
+    turnText.innerText = `${winner} ${isTheWinner}`;
     // Open alert with the winner
-    alert(winner + ' is the winner! Close this alert to play again');
+    alert(`${winner} ${isTheWinner} ${closeThisAlertToPlayAgain}`);
     // Reload the game
     window.location.reload();
   }, 1000);
@@ -81,7 +81,7 @@ function turn(playerChosenAttack) {
   let bonusAttack;
 
   // Update HTML text with the used attack
-  turnText.innerText = `${player.name} usou ${playerChosenAttack.name}`;
+  turnText.innerText = `${player.name} ${used} ${playerChosenAttack.name}`;
 
   canAttack = player.canAttack(playerChosenAttack.accuracy);
   if(canAttack) {
@@ -90,7 +90,7 @@ function turn(playerChosenAttack) {
     if(gameIsOver) gameOver(player.name)
   } else {
     // Update HTML text in case the attack misses
-    turnText.innerText += ', mas errou!';
+    turnText.innerText += `, ${butMissed}`;
   }
 
   // Wait 2000ms to execute opponent attack (Player attack animation time)
@@ -100,7 +100,7 @@ function turn(playerChosenAttack) {
     const opponentAttack = opponent.randomlyAttack();
 
     // Update HTML text with the used attack
-    turnText.innerText = `${opponent.name} usou  ${opponentAttack.name}`;
+    turnText.innerText = `${opponent.name} ${used}  ${opponentAttack.name}`;
 
     //Check if the opponent can or can not attack
     canAttack = opponent.canAttack(opponentAttack.accuracy);
@@ -110,13 +110,13 @@ function turn(playerChosenAttack) {
       if(gameIsOver) gameOver(opponent.name)
     } else {
       // Update HTML text in case the attack misses
-      turnText.innerText += ', mas errou!';
+      turnText.innerText += `, ${butMissed}`;
     }
 
     // Wait 2000ms to end the turn (Opponent attack animation time)
     setTimeout(() => {
       // Update HTML text for the next turn
-      turnText.innerText = 'Escolha um ataque!';
+      turnText.innerText = `${chooseOneAttack}`;
       isTurnHappening = false;
     }, 2000);
   }, 2000);

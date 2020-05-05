@@ -7,10 +7,15 @@
   <title>Jogo do Bixo</title>
   <script src="./Type.js"></script>
   <script src="./Bonus.js"></script>
+  <script src="./Message.js"></script>
   <script src="./Player.js"></script>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <div id="options">
+    <select id="selectLanguage">
+    </select>
+  </div>
   <div id="arena">
     <div id="opponent">
       <div id="opponent-health-bar">
@@ -46,10 +51,31 @@
     </div>
     <div>
       <p id="text">
-        Escolha um ataque!
       </p>
     </div>
   </div>
+  <script>
+
+    //Initialize the text of status of arena
+    document.getElementById("text").innerHTML = chooseOneAttack;
+
+    //Make the selecter of languages
+    var selectLanguage = document.getElementById("selectLanguage");
+    languages.map((language) => {
+      var option = document.createElement("option");
+      option.text = language;
+      option.value = language;
+      selectLanguage.add(option);
+    })
+
+    //Set a event listener to select of languages
+    selectLanguage.onchange = function() {
+      var index = document.getElementById("selectLanguage").selectedIndex;
+      initializeMessage(languages[index]);
+      document.getElementById("text").innerHTML = chooseOneAttack;
+    }
+
+  </script>
   <script src="ex.js"></script>
 </body>
 </html>
