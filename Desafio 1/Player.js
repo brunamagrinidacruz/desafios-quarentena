@@ -1,15 +1,24 @@
 class Player {
-    constructor(name, type, totalHp, hp, elementHealthBar) {
+    constructor(name, type, totalHp, hp, elementHealthBar, image) {
         this.name = name;
         this.type = type;
         this.totalHp = totalHp;
         this.hp = hp;
-        this.attacks = {};
         this.elementHealthBar = elementHealthBar;
+        this.image = image;
+        this.attacks = {};
+    }
+
+    getImage(index) {
+        return this.image[index];
     }
 
     getAttack(name) {
         return this.attacks[name];
+    }
+
+    getAttackByIndex(index) {
+        return Object.values(this.attacks)[index];
     }
 
     getAttacks() {

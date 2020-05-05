@@ -5,24 +5,29 @@ const languages = [EN, BR]
 
 let used;
 let isTheWinner;
-let closeThisAlertToPlayAgain;
+let closeThisAlertTo;
+let playAgain;
+let nextLevel;
 let butMissed;
 let chooseOneAttack;
 
 function initializeMessage(language) {
-    console.log(language);
     switch(language) {
         case EN:
             used = "used"
             isTheWinner = "is the winner!";
-            closeThisAlertToPlayAgain = "Close this alert to play again"
+            closeThisAlertTo = "Close this alert to"
+            playAgain = "play again";
+            nextLevel = "go to the next round"
             butMissed = "but missed!";
             chooseOneAttack = "Please choose one attack"
             break;
         case BR: 
             used = "usou";
             isTheWinner = "é o ganhador!"
-            closeThisAlertToPlayAgain = "Feche esta janela para jogar novamente"
+            closeThisAlertTo = "Feche esta janela para"
+            playAgain = "jogar novamente";
+            nextLevel = "ir para o próximo round"
             butMissed = "mas errou!"
             chooseOneAttack = "Por favor, escolha um ataque!"
             break;

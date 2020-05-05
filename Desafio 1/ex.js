@@ -1,12 +1,13 @@
-let url = new URL(window.location.href);
+const url = new URL(window.location.href);
+const maxRounds = 2; 
 
-let player = new Player("Loro José", ELETRIC, 274, 274, document.getElementById('player-health'));
+let player = new Player("Loro José", ELETRIC, 274, 274, document.getElementById('player-health'), ["assets/pirate.gif", "assets/pirate-level2.gif"]);
 attachAttackToPlayer(player, 'reprovacaoEmCalculo');
 attachAttackToPlayer(player, 'aguaNoPC');
-attachAttackToPlayer(player, 'segmentationFault');
 attachAttackToPlayer(player, 'transformarEmMembroDoGema');
+attachAttackToPlayer(player, 'segmentationFault');
 
-let opponent = new Player("Dr. Sérgio", ROCK, 292, 292, document.getElementById('opponent-health'));
+let opponent = new Player("Dr. Sérgio", ROCK, 292, 292, document.getElementById('opponent-health'), ["assets/dinossaur.gif", "assets/dinossaur-level2.gif"]);
 attachAttackToPlayer(opponent, 'cometa');
 attachAttackToPlayer(opponent, 'tsunami');
 attachAttackToPlayer(opponent, 'rugido');
@@ -16,20 +17,71 @@ const turnText = document.getElementById('text');
 let isTurnHappening = false;
 let round = url.searchParams.get("round") == null ? 1 : url.searchParams.get("round");
 if(round > 1) {
-  upgradePlayer(round, player);
-  upgradePlayer(round, opponent);
+  upgradeAttackPlayer(round, player);
+  upgradeAttackPlayer(round, opponent);
 }
 
+//Set the round counter
+document.getElementById("round").innerHTML = `Round: ${round}`;
+
+//Initialize the text and value of the button of attacks
+function initializePlayerAttacks() {
+  let attack1 = document.getElementById("attack1-button");
+  attack1.innerHTML = player.getAttackByIndex(0).name;
+  attack1.value = player.getAttackByIndex(0).id;
+  let attack2 = document.getElementById("attack2-button");
+  attack2.innerHTML = player.getAttackByIndex(1).name;
+  attack2.value = player.getAttackByIndex(1).id;
+  let attack3 = document.getElementById("attack3-button");
+  attack3.innerHTML = player.getAttackByIndex(2).name;
+  attack3.value = player.getAttackByIndex(2).id;
+  let attack4 = document.getElementById("attack4-button");
+  attack4.innerHTML = player.getAttackByIndex(3).name;
+  attack4.value = player.getAttackByIndex(3).id;
+}
+initializePlayerAttacks();
+
+//Set image level 1 as pattern
+document.getElementById("opponent-image").setAttribute("src", opponent.getImage(0));
+document.getElementById("player-image").setAttribute("src", player.getImage(0));
+
+//Initialize the image of player
+function initializeImages() {
+  let image;
+
+  //If the image to the round exists, update
+  image = opponent.getImage(parseInt(round) - 1);
+  if(image != undefined) {
+    document.getElementById("opponent-image").setAttribute("src", image);
+  }
+
+  //If the image to the round exists, update
+  image = player.getImage(parseInt(round) - 1);
+  if(image != undefined) {
+    document.getElementById("player-image").setAttribute("src", image)
+  }
+
+}
+initializeImages();
+
 function gameOver (winner) {
+  let nextRound = parseInt(round)+1;
   // Wait 1000 (Health loss animation)
   setTimeout(() => {
     // Update HTML text with the winner
     turnText.innerText = `${winner} ${isTheWinner}`;
     // Open alert with the winner
-    alert(`${winner} ${isTheWinner} ${closeThisAlertToPlayAgain}`);
+    console.log(round);
+    if(round == maxRounds) {
+      alert(`${winner} ${isTheWinner} ${closeThisAlertTo} ${playAgain}`);
+      nextRound = 1;
+    }
+    else {
+      alert(`${winner} ${isTheWinner} ${closeThisAlertTo} ${nextLevel}`);
+    }
     
     // Reload the game passing the round
-    url.searchParams.set('round', parseInt(round)+1);
+    url.searchParams.set('round', nextRound);
     window.location.href = url.href;
   }, 1000);
 }
@@ -89,14 +141,14 @@ function turn(playerChosenAttack) {
 
 // Set buttons click interaction
 document.getElementById('attack1-button').addEventListener('click', function() {
-  turn(player.getAttack('reprovacaoEmCalculo'));
+  turn(player.getAttack(document.getElementById('attack1-button').value));
 });
 document.getElementById('attack2-button').addEventListener('click', function() {
-  turn(player.getAttack('aguaNoPC'));
+  turn(player.getAttack(document.getElementById('attack2-button').value));
 });
 document.getElementById('attack3-button').addEventListener('click', function() {
-  turn(player.getAttack('segmentationFault'));
+  turn(player.getAttack(document.getElementById('attack3-button').value));
 });
 document.getElementById('attack4-button').addEventListener('click', function() {
-  turn(player.getAttack('transformarEmMembroDoGema'));
+  turn(player.getAttack(document.getElementById('attack4-button').value));
 });
