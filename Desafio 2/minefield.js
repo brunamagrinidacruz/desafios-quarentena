@@ -170,7 +170,7 @@ class Map {
 				return;
 			} else {
 				clickedCell.element.style.backgroundColor = 'red';
-				this.updateLife("You lost!");
+				this.updateLife("0");
 				this.gameOver();
 				return;
 			}
