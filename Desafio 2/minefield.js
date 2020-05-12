@@ -1,15 +1,5 @@
-const CellColors = [
-	'transparent',
-	'blue',
-	'green',
-	'red',
-	'purple',
-	'maroon',
-	'turquoise',
-	'black',
-];
-
 // Cell class declaration
+//A cell is a block in the game
 class Cell {
 	constructor (root, x, y, map) {
     // Create a div element
@@ -29,6 +19,7 @@ class Cell {
 		this.element = element;
 		this.visited = false;
 		this.isFlagged = false;
+		this.itWasFlagged = false;
 		this.isBomb = false;
 		this.value = 0;
 		this.x = x;
@@ -36,8 +27,15 @@ class Cell {
 	}
 
 	reveal () {
+		console.log(this.itWasFlagged + " | " + this.isBomb);
+		if(this.itWasFlagged && this.isBomb) {
+			this.element.classList.replace('flag', 'bomb');
+			this.element.style.backgroundColor = 'green';
+		}
+
 		if (this.visited) return;
-    // Replace class hidden with class revealed on the div element
+
+    	// Replace class hidden with class revealed on the div element
 		this.element.classList.replace('hidden', 'revealed');
 		if (this.isBomb) {
 			this.element.classList.add('bomb');
@@ -48,21 +46,35 @@ class Cell {
 		this.visited = true;
 	}
 
-  // *************************************************************************************
-  // Here you need to implement toggleFlag function that depending on isFlagged variable
-  // will apply or remove the css class 'flag' from the this instantite element
-  // and will invert the flag
-  // (This function is called inside cellRightClick function that are in the Map class,
-  // you dont need to worry with that)
-  // *************************************************************************************
+
+// *************************************************************************************
+// Here you need to implement toggleFlag function that depending on isFlagged variable
+// will apply or remove the css class 'flag' from the this instantite element
+// and will invert the flag
+// (This function is called inside cellRightClick function that are in the Map class,
+// you dont need to worry with that)
+// *************************************************************************************
+	toggleFlag() {
+		this.itWasFlagged = true;
+		if(!this.isFlagged) {
+			this.element.classList.add("flag");
+			this.isFlagged = true;
+		} else {
+			this.element.classList.remove("flag");
+			this.isFlagged = false;
+		}
+	}
+		
 }
 
 class Map {
-	constructor (root, width, height, numberOfBombs) {
+	constructor (root, width = 50, height = 30, numberOfBombs = 300, lifes = 1) {
 		this.cells = [];
 		this.width = width;
 		this.height = height;
 		this.bombCount = numberOfBombs;
+		this.lifes = lifes;
+		this.updateLife(lifes);
 		this.hasMapBeenClickedYet = false;
 		this.isGameOver = false;
 		this.visibleCells = 0;
@@ -75,6 +87,12 @@ class Map {
 		}
 
 		root.style.gridTemplateColumns = `repeat(${width}, max-content)`;
+	}
+
+	//Update life html
+	updateLife(life) {
+		lifes = document.getElementById("lifes");
+		lifes.innerText = life;
 	}
 
 	// Used to verify if the given position is outside the map bounds
@@ -143,9 +161,19 @@ class Map {
 			this.hasMapBeenClickedYet = true;
 		}
 		if (clickedCell.isBomb) {
-			clickedCell.element.style.backgroundColor = 'red';
-			this.gameOver();
-			return;
+			//If the lifes is bigger than 1, there is still a chance
+			if(this.lifes > 1) {
+				clickedCell.reveal();
+				clickedCell.element.style.backgroundColor = 'yellow';
+				this.lifes--;
+				this.updateLife(this.lifes);
+				return;
+			} else {
+				clickedCell.element.style.backgroundColor = 'red';
+				this.updateLife("Perdeu!");
+				this.gameOver();
+				return;
+			}
 		}
 		clickedCell.reveal();
 		this.visibleCells ++;
@@ -173,12 +201,17 @@ class Map {
 		for (let row = 0; row < this.height; row ++) {
 			for (let column = 0; column < this.width; column ++) {
 				const cell = this.cells[row][column];
-				if (cell.isBomb && !cell.isFlagged) cell.reveal();
+				// if (cell.isBomb && !cell.isFlagged) cell.reveal();
+				if (cell.isBomb) cell.reveal();
 			}
 		}
 		this.isGameOver = true;
 	}
 }
 
-// Instantiate a Map object
-new Map(document.getElementById('root'), 50, 30, 300);
+//Receving the level
+const url = new URL(window.location.href);
+let level = url.searchParams.get("level") == null ? 0 : url.searchParams.get("level");
+
+// Instantiate a Map object with the properties of the level
+new Map(document.getElementById('root'), levels[level].width, levels[level].height, levels[level].numberOfBombs, levels[level].lifes);
