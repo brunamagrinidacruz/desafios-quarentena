@@ -41,3 +41,10 @@ html, body {
 .revealed {
 	cursor: default;
 }
+
+.text {
+	text-align: left;
+	margin-left: 20px;
+	margin-top: 5px;
+	font-size: 30px;
+}

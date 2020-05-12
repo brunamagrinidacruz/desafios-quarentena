@@ -27,7 +27,7 @@ class Cell {
 	}
 
 	reveal () {
-		console.log(this.itWasFlagged + " | " + this.isBomb);
+		//If it was flagged and it was a bomb, revel
 		if(this.itWasFlagged && this.isBomb) {
 			this.element.classList.replace('flag', 'bomb');
 			this.element.style.backgroundColor = 'green';
@@ -92,7 +92,7 @@ class Map {
 	//Update life html
 	updateLife(life) {
 		lifes = document.getElementById("lifes");
-		lifes.innerText = life;
+		lifes.innerText = `Lifes: ${life}`;
 	}
 
 	// Used to verify if the given position is outside the map bounds
@@ -170,7 +170,7 @@ class Map {
 				return;
 			} else {
 				clickedCell.element.style.backgroundColor = 'red';
-				this.updateLife("Perdeu!");
+				this.updateLife("You lost!");
 				this.gameOver();
 				return;
 			}
