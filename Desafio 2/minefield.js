@@ -213,5 +213,13 @@ class Map {
 const url = new URL(window.location.href);
 let level = url.searchParams.get("level") == null ? 0 : url.searchParams.get("level");
 
-// Instantiate a Map object with the properties of the level
-new Map(document.getElementById('root'), levels[level].width, levels[level].height, levels[level].numberOfBombs, levels[level].lifes);
+//If it was a wrong level, return to index.html
+if(levels[level] == undefined) {
+	const url = new URL(window.location.href);
+	//The url is .../index.html, so I have to go to .../minefield.html
+	window.location.href = url.href.replace("minefield", "index");
+} else {
+	// Instantiate a Map object with the properties of the level
+	new Map(document.getElementById('root'), levels[level].width, levels[level].height, levels[level].numberOfBombs, levels[level].lifes);
+}
+

@@ -8,13 +8,16 @@ for(let i = 0; i < levels.length; i++) {
    selectLevel.add(option);
 }
 
-//Set a event listener when select the level
-selectLevel.onchange = function() {
-    const index = document.getElementById("level").selectedIndex;
-    //Initializing the game passing the level
-    const url = new URL(window.location.href);
-    //Set the index of the level selected
-    url.searchParams.set('level', index);
-    //The url is .../index.html, so I have to go to .../minefield.html
-    window.location.href = url.href.replace("index", "minefield");
- }
+
+var start = document.getElementById("start");
+
+//Set a event listener to start the game
+start.onclick = function() {
+   const index = document.getElementById("level").selectedIndex;
+   //Initializing the game passing the level
+   const url = new URL(window.location.href);
+   //Set the index of the level selected
+   url.searchParams.set('level', index);
+   //The url is .../index.html, so I have to go to .../minefield.html
+   window.location.href = url.href.replace("index", "minefield");
+}
