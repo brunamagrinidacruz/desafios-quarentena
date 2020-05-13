@@ -27,14 +27,7 @@ class Cell {
 	}
 
 	reveal () {
-		//If it was flagged and it was a bomb, revel
-		if(this.itWasFlagged && this.isBomb) {
-			this.element.classList.replace('flag', 'bomb');
-			this.element.style.backgroundColor = 'green';
-		}
-
 		if (this.visited) return;
-
     	// Replace class hidden with class revealed on the div element
 		this.element.classList.replace('hidden', 'revealed');
 		if (this.isBomb) {
@@ -44,6 +37,13 @@ class Cell {
 			this.element.style.color = CellColors[this.value] || 'black';
 		}
 		this.visited = true;
+	}
+
+	revealFlag() {
+		this.element.classList.remove('flag');
+		this.element.classList.replace('hidden', 'revealed');
+		this.element.innerText = 'X';
+		this.element.style.color = 'red';
 	}
 
 
@@ -164,7 +164,6 @@ class Map {
 			//If the lifes is bigger than 1, there is still a chance
 			if(this.lifes > 1) {
 				clickedCell.reveal();
-				clickedCell.element.style.backgroundColor = 'yellow';
 				this.lifes--;
 				this.updateLife(this.lifes);
 				return;
@@ -201,8 +200,9 @@ class Map {
 		for (let row = 0; row < this.height; row ++) {
 			for (let column = 0; column < this.width; column ++) {
 				const cell = this.cells[row][column];
-				// if (cell.isBomb && !cell.isFlagged) cell.reveal();
-				if (cell.isBomb) cell.reveal();
+				if (cell.isBomb && !cell.isFlagged) cell.reveal();
+				//If it was flagged and it wasn't a bomb, put "X"
+				if(!cell.isBomb && cell.isFlagged) cell.revealFlag();
 			}
 		}
 		this.isGameOver = true;

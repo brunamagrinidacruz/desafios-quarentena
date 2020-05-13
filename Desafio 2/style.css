@@ -53,32 +53,3 @@ html, body {
 	text-align: center;
 	margin-top: 50px;
 }
-
-.subtitle {
-	display: flex;
-}
-
-.description {
-	text-align: left;
-	margin-left: 20px;
-	margin-top: 5px;
-	margin-bottom: 30px;
-}
-
-.subtitle_row {
-	display: flex;
-}
-
-.block {
-	width: 10px;
-	height: 10px;
-	margin-right: 5px;
-}
-
-.green {
-	background-color: green;
-}
-
-.yellow {
-	background-color: yellow;
-}
