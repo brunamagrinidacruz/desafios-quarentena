@@ -19,7 +19,6 @@ class Cell {
 		this.element = element;
 		this.visited = false;
 		this.isFlagged = false;
-		this.itWasFlagged = false;
 		this.isBomb = false;
 		this.value = 0;
 		this.x = x;
@@ -55,7 +54,6 @@ class Cell {
 // you dont need to worry with that)
 // *************************************************************************************
 	toggleFlag() {
-		this.itWasFlagged = true;
 		if(!this.isFlagged) {
 			this.element.classList.add("flag");
 			this.isFlagged = true;
