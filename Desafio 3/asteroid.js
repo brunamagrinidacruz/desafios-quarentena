@@ -6,6 +6,8 @@ const MAX_ASTEROID_LIFE = 3;
 
 const MAX_ASTEROID_ROTATION_SPEED = 1;
 
+const  AMOUNT_VARIATIONS_ASTEROIDS = 3;
+
 const SCORE_TEXT = "Destroyd Asteroids: "
 
 /**
@@ -20,7 +22,7 @@ class Asteroid extends MovableEntity {
 		containerElement,
 		mapInstance,
 		initialPosition,
-		scoreElement,
+		scoreElement
 	) {
 		const size = Asteroid.getRandomSize();
 		const direction = Asteroid.getRandomDirection();
@@ -41,7 +43,7 @@ class Asteroid extends MovableEntity {
 		this.life = this.calculateMaxLife();
 
 		// Finds a random image to assign to the asteroid's element
-		const asteroidImageIndex = Math.floor(Math.random() * 3) + 1;
+		const asteroidImageIndex = Math.floor(Math.random() * AMOUNT_VARIATIONS_ASTEROIDS) + 1;
 		this.rootElement.style.backgroundImage = `url('assets/asteroid-${asteroidImageIndex}.svg')`;
 		this.rootElement.style.backgroundSize = size + 'px';
 
@@ -86,6 +88,19 @@ class Asteroid extends MovableEntity {
 		const sizePercentage = (this.size - MIN_ASTEROID_SIZE) / (MAX_ASTEROID_SIZE - MIN_ASTEROID_SIZE);
 		return Math.round(sizePercentage * (MAX_ASTEROID_LIFE - MIN_ASTEROID_LIFE) + MIN_ASTEROID_LIFE);
 	}
+
+	/**
+	 * This function decides if, when the asteroid be destroided, should spawn a new asteroid to replace
+	 * @returns { boolean }
+	 */
+	shouldBabyAsteroidSpawn() {
+		// Note that the formula considers how long the gave have been going.
+		// the longed the game, the higher the chance to spawn more asteroids.
+		const asteroidSpawnChance = 0.003 + Math.sqrt(Date.now() - this.gameStartTimestamp) / 10000000;
+
+		return Math.random() < asteroidSpawnChance;
+	}
+
 
 	/**
 	* Uppon collision with a bullet, reduces the asteroid's life. If the asteroid
