@@ -18,6 +18,8 @@ class MovableEntity {
 		initialVelocity = new Vector(0, 0),
 		direction = new Vector(1, 0), // facing right
 	) {
+		this.containerElement = containerElement;
+		
 		this.size = size;
 		this.position = initialPosition;
 		this.velocity = initialVelocity;

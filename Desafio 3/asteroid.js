@@ -22,9 +22,11 @@ class Asteroid extends MovableEntity {
 		containerElement,
 		mapInstance,
 		initialPosition,
-		scoreElement
+		scoreElement,
+		backgroundImage = undefined,
+		size = undefined
 	) {
-		const size = Asteroid.getRandomSize();
+		size = size == undefined ? Asteroid.getRandomSize() : size;
 		const direction = Asteroid.getRandomDirection();
 
 		// The `super` function will call the constructor of the parent class.
@@ -44,10 +46,10 @@ class Asteroid extends MovableEntity {
 
 		// Finds a random image to assign to the asteroid's element
 		const asteroidImageIndex = Math.floor(Math.random() * AMOUNT_VARIATIONS_ASTEROIDS) + 1;
-		this.rootElement.style.backgroundImage = `url('assets/asteroid-${asteroidImageIndex}.svg')`;
+		this.rootElement.style.backgroundImage = backgroundImage == undefined ? `url('assets/asteroid-${asteroidImageIndex}.svg')` : backgroundImage;
 		this.rootElement.style.backgroundSize = size + 'px';
 
-		//Will update the number of destroyed asteroids
+		//Keeps the number of destroyed asteroids
 		this.scoreElement = scoreElement;
 	}
 
@@ -90,17 +92,17 @@ class Asteroid extends MovableEntity {
 	}
 
 	/**
-	 * This function decides if, when the asteroid be destroided, should spawn a new asteroid to replace
-	 * @returns { boolean }
-	 */
-	shouldBabyAsteroidSpawn() {
+	* This function will check if an asteroid should spawn at the current game frame.
+	* @returns { boolean }
+	*/
+	shouldBabyAsteroidSpawn () {
 		// Note that the formula considers how long the gave have been going.
 		// the longed the game, the higher the chance to spawn more asteroids.
-		const asteroidSpawnChance = 0.003 + Math.sqrt(Date.now() - this.gameStartTimestamp) / 10000000;
 
-		return Math.random() < asteroidSpawnChance;
+		// const babyAsteroidSpawnChance = 0.003 + Math.sqrt(Date.now() - this.gameStartTimestamp) / 10000000;
+		// return Math.random() < babyAsteroidSpawnChance;
+		return Math.floor(Math.random() * 10) == 1;
 	}
-
 
 	/**
 	* Uppon collision with a bullet, reduces the asteroid's life. If the asteroid
@@ -116,6 +118,7 @@ class Asteroid extends MovableEntity {
 		this.life --;
 		if (this.life === 0) {
 			this.scoreElement.innerHTML = SCORE_TEXT + (parseInt(this.scoreElement.innerHTML.split(":")[1]) + 1);
+			if(this.shouldBabyAsteroidSpawn()) new Asteroid(this.containerElement, this.mapInstance, this.position, this.scoreElement, `url('assets/dinosaur.svg')`, 40);
 			this.mapInstance.removeEntity(this);
 			this.delete();
 		}
