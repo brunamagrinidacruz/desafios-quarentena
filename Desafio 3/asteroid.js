@@ -6,6 +6,8 @@ const MAX_ASTEROID_LIFE = 3;
 
 const MAX_ASTEROID_ROTATION_SPEED = 1;
 
+const SCORE_TEXT = "Destroyd Asteroids: "
+
 /**
 * This is a class declaration
 * This class is responsible for defining the Asteroids's behavior.
@@ -17,7 +19,8 @@ class Asteroid extends MovableEntity {
 	constructor (
 		containerElement,
 		mapInstance,
-		initialPosition
+		initialPosition,
+		scoreElement,
 	) {
 		const size = Asteroid.getRandomSize();
 		const direction = Asteroid.getRandomDirection();
@@ -41,6 +44,9 @@ class Asteroid extends MovableEntity {
 		const asteroidImageIndex = Math.floor(Math.random() * 3) + 1;
 		this.rootElement.style.backgroundImage = `url('assets/asteroid-${asteroidImageIndex}.svg')`;
 		this.rootElement.style.backgroundSize = size + 'px';
+
+		//Will update the number of destroyed asteroids
+		this.scoreElement = scoreElement;
 	}
 
 	/**
@@ -94,6 +100,7 @@ class Asteroid extends MovableEntity {
 
 		this.life --;
 		if (this.life === 0) {
+			this.scoreElement.innerHTML = SCORE_TEXT + (parseInt(this.scoreElement.innerHTML.split(":")[1]) + 1);
 			this.mapInstance.removeEntity(this);
 			this.delete();
 		}

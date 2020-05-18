@@ -1,11 +1,14 @@
 // This is the container of all movableEntities
 const movableEntityContainer = document.getElementById('movable-entity-container');
+const scoreElement = document.getElementById("score");
+const timeSpentElement = document.getElementById("time-spent");
+const TIME_SPENT_TEXT = "Time: "
 
 // creates the single only map instance in the game.
 // There should be only one map in the game, so it is a Singleton class.
 // If you'd like to know more about the singleton pattern, see this link:
 // https://en.wikipedia.org/wiki/Singleton_pattern
-const map = new Map(movableEntityContainer);
+const map = new Map(movableEntityContainer, scoreElement);
 
 // creates the single only player instance in the game.
 const player = new Player(
@@ -48,9 +51,42 @@ document.body.addEventListener('keyup', event => {
 // https://javascript.info/settimeout-setinterval
 const intervalHandler = setInterval(frame);
 
+let isGameOver = false;
+
 // This is the function that will end the game
 function gameOver () {
+	isGameOver = true;
 	// This will unregister the frame function, so nothing else will be updated
 	clearInterval(intervalHandler);
 	alert('Você perdeu');
 }
+
+function formatTwoDigitsNumber(number) {
+	return number < 10 ? "0" + number : number;
+}
+
+//Function responsible to handle the counter until the game is over
+function counter() {
+	if(isGameOver) return;
+	setTimeout(() => {
+		let second = parseInt(timeSpentElement.innerHTML.split(":")[3]);
+		let minut = parseInt(timeSpentElement.innerHTML.split(":")[2]);
+		let hour = parseInt(timeSpentElement.innerHTML.split(":")[1]);
+
+		second++;
+
+		if(second > 59) {
+			minut++;
+			second = 0;
+		}
+
+		if(minut > 59) {
+			hour++;
+			minut = 0;
+		}
+		
+		timeSpentElement.innerText = TIME_SPENT_TEXT + `${formatTwoDigitsNumber(hour)}:${formatTwoDigitsNumber(minut)}:${formatTwoDigitsNumber(second)}`;
+		counter();
+	}, 1000);
+}
+counter();

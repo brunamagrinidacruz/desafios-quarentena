@@ -10,7 +10,7 @@ class Map {
 	/**
 	* @argument { HTMLDivElement } containerElement
 	*/
-	constructor (containerElement) {
+	constructor (containerElement, scoreElement) {
 		// This array will contain all of the game's movableEntities.
 		// All movableEntities will have it's physics updated in the `frame` function,
 		// and will also be checked for possible collisions every frame.
@@ -20,6 +20,9 @@ class Map {
 
 		// This is to allow for the map to set it's difficulty based on the game's time length
 		this.gameStartTimestamp = Date.now();
+
+		//Score
+		this.scoreElement = scoreElement;
 	}
 
 	/**
@@ -108,7 +111,7 @@ class Map {
 			const position = new Vector(Math.random() - 0.5, Math.random() - 0.5).normalize().scale(299);
 
 			// create the asteroid
-			new Asteroid(this.containerElement, this, position);
+			new Asteroid(this.containerElement, this, position, this.scoreElement);
 		}
 	}
 }
