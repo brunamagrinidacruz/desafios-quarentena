@@ -1,4 +1,4 @@
-const PLAYER_SIZE = 20;
+const PLAYER_SIZE = 30;
 
 /**
 * This is a class declaration
