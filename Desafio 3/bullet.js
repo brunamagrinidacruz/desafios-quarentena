@@ -31,9 +31,15 @@ class Bullet extends MovableEntity {
 		// in the `map.js` file
 		mapInstance.addEntity(this);
 
+		//The chance the bullet to be special is 1/5
+		const especialBullet =  Math.floor(Math.random() * 5) == 1;
+
 		// Assigns the bullet's image to it's element
-		this.rootElement.style.backgroundImage = "url('assets/bullet.svg')";
+		this.rootElement.style.backgroundImage = especialBullet ? "url('assets/bullet-bonus.svg')" : "url('assets/bullet.svg')";
 		this.rootElement.style.backgroundSize = this.size + 'px';
+		// Set the damage that the bullet will cause. It represents the number of lifes
+		//That will take from asteroid. Could be 1 to 3
+		this.damage = especialBullet ? (Math.floor(Math.random() * 3) + 1) : 1;		
 	}
 
 	// If the bullet collides with an asteroid, delete the bullet.
@@ -42,5 +48,9 @@ class Bullet extends MovableEntity {
 			this.mapInstance.removeEntity(this);
 			this.delete();
 		}
+	}
+
+	getDamage() {
+		return this.damage;
 	}
 }

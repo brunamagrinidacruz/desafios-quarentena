@@ -99,8 +99,7 @@ class Asteroid extends MovableEntity {
 		// Note that the formula considers how long the gave have been going.
 		// the longed the game, the higher the chance to spawn more asteroids.
 
-		// const babyAsteroidSpawnChance = 0.003 + Math.sqrt(Date.now() - this.gameStartTimestamp) / 10000000;
-		// return Math.random() < babyAsteroidSpawnChance;
+		//The chance the asteroid to have a baby asteroid when destroyd is 1/10
 		return Math.floor(Math.random() * 10) == 1;
 	}
 
@@ -115,8 +114,9 @@ class Asteroid extends MovableEntity {
 		// https://www.geeksforgeeks.org/instanceof-operator-in-javascript/
 		if (!(object instanceof Bullet)) return;
 
-		this.life --;
-		if (this.life === 0) {
+		//The life taken by bullet depends the bullet
+		this.life = this.life - object.getDamage();
+		if (this.life <= 0) {
 			this.scoreElement.innerHTML = SCORE_TEXT + (parseInt(this.scoreElement.innerHTML.split(":")[1]) + 1);
 			if(this.shouldBabyAsteroidSpawn()) new Asteroid(this.containerElement, this.mapInstance, this.position, this.scoreElement, `url('assets/dinosaur.svg')`, 40);
 			this.mapInstance.removeEntity(this);
