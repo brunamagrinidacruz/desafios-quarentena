@@ -112,16 +112,27 @@ class Asteroid extends MovableEntity {
 		// the instanceof operator will check if an object was created by a class, or one of it's children.
 		// If you'd like to know more about the instanceof operator, see this link:
 		// https://www.geeksforgeeks.org/instanceof-operator-in-javascript/
-		if (!(object instanceof Bullet)) return;
 
-		//The life taken by bullet depends the bullet
-		this.life = this.life - object.getDamage();
-		if (this.life <= 0) {
+		if(object instanceof Bullet) {
+			this.life = this.life - object.getDamage();
+			if (this.life <= 0) {
+				this.scoreElement.innerHTML = SCORE_TEXT + (parseInt(this.scoreElement.innerHTML.split(":")[1]) + 1);
+				if(this.shouldBabyAsteroidSpawn()) new Asteroid(this.containerElement, this.mapInstance, this.position, this.scoreElement, `url('assets/dinosaur.svg')`, 40);
+				this.mapInstance.removeEntity(this);
+				this.delete();
+			}
+		}
+		
+		//If it is a bomb, the asteroid should exploded
+		if(object instanceof Bomb) {
 			this.scoreElement.innerHTML = SCORE_TEXT + (parseInt(this.scoreElement.innerHTML.split(":")[1]) + 1);
-			if(this.shouldBabyAsteroidSpawn()) new Asteroid(this.containerElement, this.mapInstance, this.position, this.scoreElement, `url('assets/dinosaur.svg')`, 40);
 			this.mapInstance.removeEntity(this);
 			this.delete();
 		}
+
+
+		//The life taken by bullet depends the bullet
+
 	}
 
 	/*

@@ -60,6 +60,10 @@ class Player extends MovableEntity {
 		new Bullet (this.containerElement, this.mapInstance, this.direction);
 	}
 
+	bomb() {
+		new Bomb(this.containerElement, this.mapInstance, this.direction);
+	}
+
 	/**
 	* This is only called if the player collides with an asteroid. Therefore,
 	* the game should end.

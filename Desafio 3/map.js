@@ -64,6 +64,8 @@ class Map {
 		if (entity1 instanceof Asteroid && entity2 instanceof Asteroid) return;
 		if (entity1 instanceof Player && entity2 instanceof Bullet) return;
 		if (entity1 instanceof Bullet && entity2 instanceof Player) return;
+		if (entity1 instanceof Bomb && entity2 instanceof Player) return;
+		if (entity1 instanceof Player && entity2 instanceof Bomb) return;
 
 		if (MovableEntity.didEntitiesColide(entity1, entity2)) {
 			entity1.collided(entity2);

@@ -2,7 +2,10 @@
 const movableEntityContainer = document.getElementById('movable-entity-container');
 const scoreElement = document.getElementById("score");
 const timeSpentElement = document.getElementById("time-spent");
+const bombElement = document.getElementById("bomb")
+
 const TIME_SPENT_TEXT = "Time: "
+const BOMB_TEXT = "Amount Bombs Availables: "
 
 // creates the single only map instance in the game.
 // There should be only one map in the game, so it is a Singleton class.
@@ -46,6 +49,30 @@ document.body.addEventListener('keyup', event => {
 	delete pressedKeys[event.key];
 });
 
+//When the user click, it will spawn a bomb that will have a duration of 3s
+//And will protect the spaceship
+//The player has a limited amount of bombs
+let canSpawnBown = true;
+document.body.addEventListener("click", event => {
+	let amountAvalibleBomb = parseInt(bombElement.innerText.split(":")[1])
+	
+	//There is no bombs avalibles
+	if(amountAvalibleBomb <= 0) return;
+	
+	if(canSpawnBown) {
+		canSpawnBown = false;
+		player.bomb();
+
+		amountAvalibleBomb--;
+		bombElement.innerText = `${BOMB_TEXT}${amountAvalibleBomb}`
+		
+		//A bomb just can be spawned again when the other first bomb exploded
+		setTimeout(() => {
+			canSpawnBown = true;
+		}, BOMB_TIME_LIFE)
+	}
+})
+
 // Registers the frame function to run at every frame.
 // if you'd like to know more about intervals, see this link
 // https://javascript.info/settimeout-setinterval
@@ -76,6 +103,11 @@ function counter() {
 		second++;
 
 		if(second > 59) {
+			//Each minute, will receaive a bomb
+			let amountAvalibleBomb = parseInt(bombElement.innerText.split(":")[1])
+			amountAvalibleBomb++;
+			bombElement.innerText = `${BOMB_TEXT}${amountAvalibleBomb}`
+
 			minut++;
 			second = 0;
 		}
