@@ -59,6 +59,8 @@ document.body.addEventListener('keyup', event => {
 //The player has a limited amount of bombs
 let canSpawnBown = true;
 document.body.addEventListener("click", event => {
+	if(isGameOver) return;
+	
 	let amountAvalibleBomb = parseInt(bombElement.innerText.split(":")[1])
 	
 	//There is no bombs avalibles

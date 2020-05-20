@@ -110,7 +110,7 @@ class Map {
 		if (this.shouldAsteroidSpawn()) {
 			// pick a random position for the asteroid
 			const position = new Vector(Math.random() - 0.5, Math.random() - 0.5).normalize().scale(299);
-
+			
 			// create the asteroid
 			new Asteroid(this.containerElement, this, position, this.scoreElement);
 		}
