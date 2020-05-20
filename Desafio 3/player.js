@@ -1,4 +1,6 @@
 const PLAYER_SIZE = 30;
+const INITIAL_POSITION = new Vector(0, 0);
+const VELOCITY = new Vector(0.3, 0.3);
 
 /**
 * This is a class declaration
@@ -30,7 +32,7 @@ class Player extends MovableEntity {
 		// The `super` function will call the constructor of the parent class.
 		// If you'd like to know more about class inheritance in javascript, see this link
 		// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes#Sub_classing_with_extends
-		super(containerElement, PLAYER_SIZE);
+		super(containerElement, PLAYER_SIZE, INITIAL_POSITION, VELOCITY);
 
 		this.mapInstance = mapInstance;
 		this.containerElement = containerElement;
@@ -39,6 +41,8 @@ class Player extends MovableEntity {
 		// This is so the map can execute the player's physics (see the `frame` function
 		// in the `map.js` file
 		mapInstance.addEntity(this);
+
+		this.canMove = false;
 
 		// Assigns the player's image to it's element
 		this.rootElement.style.backgroundImage = "url('assets/player.svg')";
@@ -57,11 +61,46 @@ class Player extends MovableEntity {
 	* Instantiates a bullet in front of the player.
 	*/
 	shoot () {
-		new Bullet (this.containerElement, this.mapInstance, this.direction);
+		new Bullet (this.containerElement, this.mapInstance, this.direction, this.position);
 	}
 
 	bomb() {
-		new Bomb(this.containerElement, this.mapInstance, this.direction);
+		new Bomb(this.containerElement, this.mapInstance, this.direction, this.position);
+	}
+
+	move(direction) {
+		if(!this.canMove) return;
+
+		// Updates the object element's position
+		if(direction == "left") {
+			this.position = this.position.addX(-this.velocity.x);
+			this.rootElement.style.left = this.position.x + 'px';
+		}
+
+		if(direction == "right") {
+			this.position = this.position.addX(this.velocity.x);
+			this.rootElement.style.left = this.position.x + 'px';
+		}
+
+		if(direction == "top") {
+			this.position = this.position.addY(-this.velocity.y);
+			this.rootElement.style.top = this.position.y + 'px';
+		}
+
+		if(direction == "bottom") {
+			this.position = this.position.addY(this.velocity.y);
+			this.rootElement.style.top = this.position.y + 'px';
+		}
+	}
+
+	updatePermissionMove(newPermission, element) {
+		if(!newPermission) {
+			this.position = INITIAL_POSITION;
+			this.rootElement.style.left = this.position.x + 'px';
+			this.rootElement.style.top = this.position.y + 'px';
+		}
+		
+		this.canMove = newPermission;
 	}
 
 	/**
@@ -70,5 +109,9 @@ class Player extends MovableEntity {
 	*/
 	collided () {
 		this.gameOverFunction();
+	}
+
+	frame() {
+
 	}
 }

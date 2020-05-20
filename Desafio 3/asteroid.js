@@ -129,10 +129,6 @@ class Asteroid extends MovableEntity {
 			this.mapInstance.removeEntity(this);
 			this.delete();
 		}
-
-
-		//The life taken by bullet depends the bullet
-
 	}
 
 	/*

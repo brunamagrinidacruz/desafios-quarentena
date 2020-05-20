@@ -3,6 +3,7 @@ const movableEntityContainer = document.getElementById('movable-entity-container
 const scoreElement = document.getElementById("score");
 const timeSpentElement = document.getElementById("time-spent");
 const bombElement = document.getElementById("bomb")
+const moveElement = document.getElementById("move");
 
 const TIME_SPENT_TEXT = "Time: "
 const BOMB_TEXT = "Amount Bombs Availables: "
@@ -25,8 +26,12 @@ function frame () {
 	map.frame();
 
 	// if the player is pressing one of the keys, call the turn function
-	if (pressedKeys['a'] || pressedKeys['ArrowLeft']) player.turn(-1);
-	if (pressedKeys['d'] || pressedKeys['ArrowRight']) player.turn(1);
+	if (pressedKeys['ArrowLeft']) player.turn(-1);
+	if (pressedKeys['ArrowRight']) player.turn(1);
+	if (pressedKeys['a']) player.move("left");
+	if (pressedKeys['d']) player.move("right");
+	if (pressedKeys['w']) player.move("top");
+	if (pressedKeys['s']) player.move("bottom");
 }
 
 // This is a dictionary that will hold the keys that are being held down at the time.
@@ -88,10 +93,22 @@ function gameOver () {
 	alert('Você perdeu');
 }
 
+//This function format the number to have two digits
 function formatTwoDigitsNumber(number) {
 	return number < 10 ? "0" + number : number;
 }
 
+function canPlayerMove() {
+	//The chance the player move is 1/15
+	return Math.floor(Math.random() * 15) == 1;
+}
+
+//Controlls properties moviment player
+let playerMove = {
+	canMove: false,
+	durantionMovement: 15,
+	timeStopMove: 0
+};
 //Function responsible to handle the counter until the game is over
 function counter() {
 	if(isGameOver) return;
@@ -101,7 +118,6 @@ function counter() {
 		let hour = parseInt(timeSpentElement.innerHTML.split(":")[1]);
 
 		second++;
-
 		if(second > 59) {
 			//Each minute, will receaive a bomb
 			let amountAvalibleBomb = parseInt(bombElement.innerText.split(":")[1])
@@ -116,7 +132,27 @@ function counter() {
 			hour++;
 			minut = 0;
 		}
-		
+
+		//If player can't move, check if he can now 
+		//If player can move, check if it's time to stop
+		if(!playerMove.canMove) {
+			if(canPlayerMove()) {
+				playerMove.canMove = true;
+				playerMove.durantionMovement = 15;
+				playerMove.timeStopMove = (second + 15) % 59;
+				player.updatePermissionMove(true, moveElement);
+				moveElement.innerText = `You can move for ${playerMove.durantionMovement} second(s)`;
+			}
+		} else {
+			playerMove.durantionMovement--;
+			moveElement.innerText = `You can move for ${playerMove.durantionMovement} second(s)`;
+			if(second == playerMove.timeStopMove) {
+				moveElement.innerText = "You can't move"
+				player.updatePermissionMove(false, moveElement);
+				playerMove.canMove = false;
+			}
+		}
+
 		timeSpentElement.innerText = TIME_SPENT_TEXT + `${formatTwoDigitsNumber(hour)}:${formatTwoDigitsNumber(minut)}:${formatTwoDigitsNumber(second)}`;
 		counter();
 	}, 1000);

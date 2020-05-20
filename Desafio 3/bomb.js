@@ -19,12 +19,13 @@ class Bomb extends MovableEntity {
 	constructor (
 		containerElement,
 		mapInstance,
-		direction
+		direction,
+		initialPosition = undefined
 	) {
 		// The `super` function will call the constructor of the parent class.
 		// If you'd like to know more about class inheritance in javascript, see this link
 		// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes#Sub_classing_with_extends
-		super(containerElement, BOMB_SIZE, undefined, direction.normalize().scale(BOMB_SPEED), direction);
+		super(containerElement, BOMB_SIZE, initialPosition, direction.normalize().scale(BOMB_SPEED), direction);
 
 		this.mapInstance = mapInstance;
 

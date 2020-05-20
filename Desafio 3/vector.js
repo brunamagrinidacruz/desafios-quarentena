@@ -23,6 +23,24 @@ class Vector {
 	}
 
 	/**
+	* Adds x to vector
+	* @argument { number } x
+	* @returns { Vector }
+	*/
+	addX (x) {
+		return new Vector(this.x + x, this.y);
+	}
+
+	/**
+	* Adds y to vector
+	* @argument { number } y
+	* @returns { Vector }
+	*/
+	addY (y) {
+		return new Vector(this.x, this.y + y);
+	}
+
+	/**
 	* Subtracts two this vector with otherVector
 	* @argument { Vector } otherVector
 	* @returns { Vector }

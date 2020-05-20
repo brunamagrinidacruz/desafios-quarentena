@@ -81,7 +81,6 @@ class Map {
 		// Note that the formula considers how long the gave have been going.
 		// the longed the game, the higher the chance to spawn more asteroids.
 		const asteroidSpawnChance = 0.003 + Math.sqrt(Date.now() - this.gameStartTimestamp) / 10000000;
-
 		return Math.random() < asteroidSpawnChance;
 	}
 
