@@ -57,6 +57,7 @@ class Player extends Entity {
 	*/
 	onGoldHooked (goldElement) {
 		this.score += goldElement.calculateScore();
+		//Update the value of score in the scoreboard
 		this.scoreElement.innerHTML = this.score;
 		GameMap.instance.verifyIfLevelIsOver();
 	}

@@ -24,8 +24,9 @@ class GameMap extends Entity {
 	/**
 	* @argument { HTMLDivElement } containerElement
 	* @argument { HTMLDivElement } levelElement The HTML element that keeps the level
+	* @argument { number } lastLevel Represents the number of the last level of the game
 	*/
-	constructor (containerElement, levelElement) {
+	constructor (containerElement, levelElement, lastLevel) {
 		// The `super` function will call the constructor of the parent class.
 		// If you'd like to know more about class inheritance in javascript, see this link
 		// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes#Sub_classing_with_extends
@@ -41,6 +42,8 @@ class GameMap extends Entity {
 		this.level = 0;
 		this.levelElement = levelElement;
 		this.initializeLevel();
+
+		this.lastLevel = lastLevel;
 
 		GameMap.instance = this;
 	}
@@ -58,13 +61,27 @@ class GameMap extends Entity {
 		}
 	}
 
+	/**
+	* Will end the game. Show a message that the player wins and reload the page
+	*/
+	gameIsOver() {
+		alert("You win! Congratulations!")
+		document.location.reload(true);
+	}
+
 	nextLevel () {
-		this.level++;
-		this.levelElement.innerHTML = this.level;
-		// Delete all remaining gold and rock elements
-		Gold.allGoldElements.forEach(gold => gold.delete());
-		Rock.allRockElements.forEach(rock => rock.delete());
-		this.initializeLevel();
+		//The game is over
+		if(this.level >= this.lastLevel) {
+			this.gameIsOver();
+		} else {
+			this.level++;
+			//Update the value of level in the scoreboard
+			this.levelElement.innerHTML = this.level;
+			// Delete all remaining gold and rock elements
+			Gold.allGoldElements.forEach(gold => gold.delete());
+			Rock.allRockElements.forEach(rock => rock.delete());
+			this.initializeLevel();
+		}
 	}
 
 	/**

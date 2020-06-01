@@ -3,7 +3,11 @@ const movableEntityContainer = document.getElementById('movable-entity-container
 const scoreElement = document.getElementById('score');
 const levelElement = document.getElementById('level');
 
-const map = new GameMap(movableEntityContainer, levelElement);
+// Represents the amount of levels that the game will have
+// When the player wins the last level, the game ends
+const LAST_LEVEL = 1;
+
+const map = new GameMap(movableEntityContainer, levelElement, LAST_LEVEL);
 const player = new Player(movableEntityContainer, scoreElement);
 
 // This is the game frame function. It is responsible for updating everything in the game.
