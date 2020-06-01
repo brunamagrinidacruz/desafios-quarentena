@@ -24,8 +24,9 @@ class Player extends Entity {
 
 	/**
 	* @argument { HTMLDivElement } containerElement The HTML element in which the player should be created
+	* @argument { HTMLDivElement } scoreElement The HTML element that keeps the score
 	*/
-	constructor (containerElement) {
+	constructor (containerElement, scoreElement) {
 		// The `super` function will call the constructor of the parent class.
 		// If you'd like to know more about class inheritance in javascript, see this link
 		// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes#Sub_classing_with_extends
@@ -44,6 +45,7 @@ class Player extends Entity {
 
 		// Will hold the player's total score.
 		this.score = 0;
+		this.scoreElement = scoreElement;
 
 		Player.instance = this;
 	}
@@ -55,7 +57,7 @@ class Player extends Entity {
 	*/
 	onGoldHooked (goldElement) {
 		this.score += goldElement.calculateScore();
-		console.log('current player score is', this.score);
+		this.scoreElement.innerHTML = this.score;
 		GameMap.instance.verifyIfLevelIsOver();
 	}
 

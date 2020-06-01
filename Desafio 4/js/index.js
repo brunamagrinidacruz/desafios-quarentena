@@ -1,8 +1,10 @@
 // This is the container of all Entities
 const movableEntityContainer = document.getElementById('movable-entity-container');
+const scoreElement = document.getElementById('score');
+const levelElement = document.getElementById('level');
 
-const map = new GameMap(movableEntityContainer);
-const player = new Player(movableEntityContainer);
+const map = new GameMap(movableEntityContainer, levelElement);
+const player = new Player(movableEntityContainer, scoreElement);
 
 // This is the game frame function. It is responsible for updating everything in the game.
 function frame () {
