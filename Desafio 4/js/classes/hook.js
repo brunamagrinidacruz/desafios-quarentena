@@ -58,6 +58,12 @@ class Hook extends MovableEntity {
 		this.state = 'swinging';
 
 		/**
+		* This represents if the hook should drop the object
+		* @type { true | false }
+		*/
+		this.shouldDrop = false;
+
+		/**
 		* This will hold the hooked object (gold of rock). If null, no object is currently being hooked
 		* @type { Entity | null }
 		*/
@@ -217,6 +223,38 @@ class Hook extends MovableEntity {
 	}
 
 	/**
+	* Set the flag that represents that the object should be drop
+	*/
+	updateDrop() {
+		//If it's not pulling a object, it doesn't need to drop
+		if(this.state !== 'pulling') return;
+		//It won't drop gold objects
+		if (this.hookedObject instanceof Gold) return;
+		//If the drop is true, shouldn't update 
+		if(this.shouldDrop) return;
+		
+		//Should drop the object
+		this.shouldDrop = true;
+	}
+
+
+	/**
+	* Delete the object that is being hooked
+	* Update the velocity of the hook 
+	*/
+	drop() {
+		//Update to not drop anymore
+		this.shouldDrop = false;
+
+		// removes forever the object that was dropped
+		this.hookedObject.delete();
+		this.hookedObject = null;
+
+		// Set the velocity as the default velocity
+		this.velocity = this.direction.scale(-EMPTY_HOOK_SPEED);
+	}
+
+	/**
 	* This method is called whenever the hook colides with something.
 	* Note that this methods overrides the parent class's collided method. This is to
 	* allow for behavior extension.
@@ -241,6 +279,7 @@ class Hook extends MovableEntity {
 		if (this.state === 'swinging') this.swing();
 		else if (this.state === 'pulling' && this.shouldStopPulling()) this.stopPulling();
 		else if (this.state === 'pulling' && this.shouldRemoveLastChain()) this.removeLastChain();
+		else if (this.state === 'pulling' && this.shouldDrop) this.drop();
 		else if (this.state === 'throwing' && this.shouldGenerateAnotherChain()) this.generateChain();
 
 		if (this.hookedObject) {

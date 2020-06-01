@@ -62,6 +62,14 @@ class Player extends Entity {
 		GameMap.instance.verifyIfLevelIsOver();
 	}
 
+	/**
+	* This funtion will be called when the user click with the left of the mouse
+	* and make the player drops the object
+	*/
+	drop() {
+		this.hook.updateDrop();
+	}
+
 	throwHook () {
 		this.hook.throw();
 	}

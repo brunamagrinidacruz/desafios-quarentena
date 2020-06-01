@@ -25,8 +25,9 @@ class GameMap extends Entity {
 	* @argument { HTMLDivElement } containerElement
 	* @argument { HTMLDivElement } levelElement The HTML element that keeps the level
 	* @argument { number } lastLevel Represents the number of the last level of the game
+	* @argument { HTMLDivElement } dynamiteElement The HTML element that keeps the count of dynamites
 	*/
-	constructor (containerElement, levelElement, lastLevel) {
+	constructor (containerElement, levelElement, lastLevel, dynamiteElement) {
 		// The `super` function will call the constructor of the parent class.
 		// If you'd like to know more about class inheritance in javascript, see this link
 		// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes#Sub_classing_with_extends
@@ -44,6 +45,7 @@ class GameMap extends Entity {
 		this.initializeLevel();
 
 		this.lastLevel = lastLevel;
+		this.dynamiteElement = dynamiteElement;
 
 		GameMap.instance = this;
 	}
@@ -77,6 +79,8 @@ class GameMap extends Entity {
 			this.level++;
 			//Update the value of level in the scoreboard
 			this.levelElement.innerHTML = this.level;
+			//Ever each level it will give a dynamite
+			this.dynamiteElement.innerHTML = parseInt(this.dynamiteElement.innerHTML) + 1;
 			// Delete all remaining gold and rock elements
 			Gold.allGoldElements.forEach(gold => gold.delete());
 			Rock.allRockElements.forEach(rock => rock.delete());
