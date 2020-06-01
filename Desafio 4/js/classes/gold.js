@@ -38,8 +38,20 @@ class Gold extends Entity {
 		// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes#Sub_classing_with_extends
 		super(containerElement, new Vector(1, 1).scale(size), initialPosition, direction);
 
-		// Assigns the hook's image to it's element
-		this.rootElement.style.backgroundImage = "url('assets/gold.svg')";
+		//The chance the gold to be special is 1/20
+		const specialGold =  Math.floor(Math.random() * 20) == 1;
+		if(specialGold) {
+			//The special gold has a score of 5 points
+			this.score = 5;
+			// Assigns the special hook's image to it's element
+			this.rootElement.style.backgroundImage = "url('assets/dinosaur.svg')";
+		}
+		else {
+			//Set as undefined because when it's not a special gold, it will be generete randomly
+			this.score = undefined;
+			// Assigns the hook's image to it's element
+			this.rootElement.style.backgroundImage = "url('assets/gold.svg')";
+		}
 
 		// Add element to rocks list, for easier tracking.
 		Gold.allGoldElements.push(this);
@@ -50,6 +62,9 @@ class Gold extends Entity {
 	* @returns { number } The score
 	*/
 	calculateScore () {
+		if(this.score) //It's a special gold
+			return this.score;
+		
 		const size = Math.max(this.size.x, this.size.y);
 		const sizePercentage = (size - MIN_GOLD_SIZE) / (MAX_GOLD_SIZE - MIN_GOLD_SIZE);
 		const score = sizePercentage * (MAX_GOLD_SCORE - MIN_GOLD_SCORE) + MIN_GOLD_SCORE;
