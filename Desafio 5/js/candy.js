@@ -55,22 +55,24 @@ class Candy {
 		 * */
 		const candyFormat = Candy.randomCandyFormat(3);
 		if(candyFormat == 0) /*!< The square candy */
-			element.style.borderRadius = "16px";
+			element.style.backgroundImage = "url(../assets/apple.svg)";
 		else if(candyFormat == 1) /*!< The circle candy */
 			element.style.borderRadius = "50px";
-		else 
+		else /*!< The squared dashed candy */
 			element.style.borderStyle = "dashed";
-			
+
 		containerElement.appendChild(element);
 		this.rootElement = element;
 
 		/*!< The strongness of a block represents how mount times the object must be combine to explod. It can be 1 or 2 times. */
 		this.strongness = 1;
 		const isAStrongBlock = Candy.willBeAStrongBlock(20);
-		if(isAStrongBlock) {
-			/*!< It will be a strong block and will be represented being all colored. */
-			this.strongness = 2;	
-		}
+		if(isAStrongBlock) 
+			/**
+			 *  It will be a strong block and will be represented being all colored. 
+			 *  This value is 3 because the explodeCandy() in grid.js is called two times to the same candy
+			 * */
+			this.strongness = 3;
 
 		this.row = row;
 		this.column = column;

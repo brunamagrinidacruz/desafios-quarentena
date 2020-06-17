@@ -317,12 +317,12 @@ class Grid {
 	* @argument { Candy } candy
 	*/
 	async explodeCandy (candy) {
+		/*!< If the candy is already destroid, it doesn't need to destroy again */
+		if(candy.isCandyDestroid) return;
 		if(candy.strongness > 1) {
 			candy.strongness--;
 			return;
 		}
-		/*!< If the candy is already destroid, it doesn't need to destroy again */
-		if(candy.isCandyDestroid) return;
 		await candy.explode();
 		/*!< If the candy will be explod, the player gets a new point */
 		this.score++;
