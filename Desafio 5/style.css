@@ -8,6 +8,20 @@ body, html {
 	overflow: hidden;
 }
 
+body {
+	display: flex;
+}
+
+p {
+	margin: 0;
+}
+
+.scoreboard {
+	font-size: 25px;
+	width: 20vw;
+	margin: 10px -21vw 0 1vw;
+}
+
 #root {
 	height: 100%;
 	width: 100%;

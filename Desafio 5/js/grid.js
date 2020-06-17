@@ -6,6 +6,12 @@
 const CANDY_SLIDING_SPEED = 200;
 
 /**
+* The time of duration of the game in seconds.
+* @type { number }
+*/
+const GAME_DURATION = 30;
+
+/**
 * Will create a new Promise that will be resolved after `time` milisseconds.
 * If you'd like to know more about promisses, see this link:
 * https://scotch.io/tutorials/javascript-promises-for-dummies
@@ -24,8 +30,10 @@ class Grid {
 	* @argument { HTMLElement } containerElement
 	* @argument { number } rows
 	* @argument { number } columns
+	* @argument { HTMLElement } scoreElement
+	* @argument { HTMLElement } timeElement
 	*/
-	constructor (containerElement, rows, columns) {
+	constructor (containerElement, rows, columns, scoreElement, timeElement) {
 		this.rows = rows;
 		this.columns = columns;
 
@@ -60,6 +68,28 @@ class Grid {
 		* @type { Candy }
 		*/
 		this.selectedCandy = null;
+
+		/**
+		 * The score HTML Element
+		 * @type { HTMLElement }
+		 */
+		this.scoreElement = scoreElement;
+
+		/** The score of the player
+		* @type { number }
+		*/
+		this.score = 0;
+
+		/**
+		 * The time HTML Element
+		 * @type { HTMLElement }
+		 */
+		this.timeElement = timeElement;
+		/*!< Initialize the time element in the screen with the game duration */
+		this.timeElement.innerHTML = `Tempo: ${GAME_DURATION}s`
+
+		/*!< Start the time counter */
+		this.time();
 
 		// Creates the grid's element'
 		const element = document.createElement('div');
@@ -288,6 +318,9 @@ class Grid {
 	*/
 	async explodeCandy (candy) {
 		await candy.explode();
+		/*!< If the candy will be explod, the player gets a new point */
+		this.score++;
+		scoreElement.innerHTML = `Pontuação: ${this.score}`
 		this.contents[candy.row][candy.column] = null;
 	}
 
@@ -437,4 +470,26 @@ class Grid {
 		// Waits for all animations to finish executing.
 		await Promise.all(promisses);
 	}
+
+	/**
+	 * Function responsable for control the game duration
+	 */
+	time() {
+		let seconds = GAME_DURATION; /*!< The amount of time in seconds */
+		/*!< Every second it will degree a second in the time board in the screen of the player */
+		const timer = setInterval(() => {
+			if(!seconds) {
+				/*!< When the time is over, a message with the score will be displayed */
+				clearInterval(timer);
+				this.canPlayerPlay = false;
+				alert(`O tempo acabou!\nSua pontuação foi de: ${this.score}\nClique "OK" para jogar novamente.`);
+				/*!< When the user click in "Ok" in the alert, it will reload the page */
+				location.reload();
+				return;
+			}
+			seconds--;
+			this.timeElement.innerHTML = `Tempo: ${seconds}s`;
+		}, 1000);
+	}
+
 }
