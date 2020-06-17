@@ -317,6 +317,12 @@ class Grid {
 	* @argument { Candy } candy
 	*/
 	async explodeCandy (candy) {
+		if(candy.strongness > 1) {
+			candy.strongness--;
+			return;
+		}
+		/*!< If the candy is already destroid, it doesn't need to destroy again */
+		if(candy.isCandyDestroid) return;
 		await candy.explode();
 		/*!< If the candy will be explod, the player gets a new point */
 		this.score++;
@@ -330,7 +336,6 @@ class Grid {
 	*/
 	async explodeAll () {
 		const explosions = this.findAllPossibleExplosions();
-
 		const results = await Promise.all(
 			explosions.map(async explosion => {
 				await Promise.all(

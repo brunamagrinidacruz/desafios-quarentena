@@ -1,6 +1,6 @@
 /**
 * This is a simple collection of possible colors the candy can take.
-* @type { ['red', 'green', 'blue', 'yellow', 'magenta', 'cyan'] }
+* @type { ['red', 'green', 'blue', 'yellow', 'magenta', 'cyan', 'ice'] }
 */
 const CandyColors = [
 	'red',
@@ -43,11 +43,34 @@ class Candy {
 	) {
 		this.onClick = onClick;
 
+		/*!< Define if the candy is already destroyed */
+		this.isCandyDestroid = false;
+
 		// Creates the candy element.
 		const element = document.createElement('div');
 		element.classList.add('candy');
+		/**
+		 *  A candy can have 3 differents forms: square, circle and a square dashed
+		 *  A random number between [0, 2] will define the form of the candy
+		 * */
+		const candyFormat = Candy.randomCandyFormat(3);
+		if(candyFormat == 0) /*!< The square candy */
+			element.style.borderRadius = "16px";
+		else if(candyFormat == 1) /*!< The circle candy */
+			element.style.borderRadius = "50px";
+		else 
+			element.style.borderStyle = "dashed";
+			
 		containerElement.appendChild(element);
 		this.rootElement = element;
+
+		/*!< The strongness of a block represents how mount times the object must be combine to explod. It can be 1 or 2 times. */
+		this.strongness = 1;
+		const isAStrongBlock = Candy.willBeAStrongBlock(20);
+		if(isAStrongBlock) {
+			/*!< It will be a strong block and will be represented being all colored. */
+			this.strongness = 2;	
+		}
 
 		this.row = row;
 		this.column = column;
@@ -63,11 +86,22 @@ class Candy {
 	}
 
 	/** @returns { number } */
+	static willBeAStrongBlock (max) {
+		return Math.floor(Math.random() * max) == 0;
+	}
+
+	/** @returns { number } */
+	static randomCandyFormat (max) {
+		return Math.floor(Math.random() * max);
+	}
+
+	/** @returns { number } */
 	get row () { return this._row; }
 	/** @returns { number } */
 	get column () { return this._column; }
 	/** @returns { number } */
 	get type () { return this._type; }
+	/** @returns { number } */
 
 	/** Will automatically update the candy's grid position, whenever it's row changes */
 	set row (newRow) {
@@ -83,6 +117,7 @@ class Candy {
 
 	/** Will automatically update the candy's border color, whenever it's type changes */
 	set type (newType) {
+		if(this.strongness != 1) this.rootElement.style.backgroundColor = CandyColors[newType];	
 		this.rootElement.style.borderColor = CandyColors[newType];
 		this._type = newType;
 	}
@@ -131,6 +166,7 @@ class Candy {
 	* other candy.
 	*/
 	async explode () {
+		this.isCandyDestroid = true;
 		await sleep(100);
 		this.rootElement.remove();
 	}
