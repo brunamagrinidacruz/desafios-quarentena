@@ -12,7 +12,10 @@ const questionsAndAnswers = [
         answer: "USPCodeLab Sanca!"
     }, {
         question: "por que o t-rex não bate palma?",
-        answer: "PORQUE ELE ESTÁ EXTINTO HEHEHEH"
+        answer: "PORQUE ELE ESTÁ EXTINTO HEHEHEH",
+        photo: {
+            link: "https://www.ahnegao.com.br/wp-content/uploads/2018/10/7-5.jpg"
+        }
     }
 ]
 
@@ -27,9 +30,10 @@ function answer(bot, chatId, message) {
     for(let i in questionsAndAnswers) {
         let questionAnswer = questionsAndAnswers[i];
         if(message == questionAnswer.question) {
-            bot.sendMessage(chatId, questionAnswer.answer);
-            if(questionAnswer.photo)
-                bot.sendPhoto(chatId, questionAnswer.photo.link, { caption: questionAnswer.photo.caption || "" })
+            bot.sendMessage(chatId, questionAnswer.answer).then(() => {
+                if(questionAnswer.photo)
+                    bot.sendPhoto(chatId, questionAnswer.photo.link, { caption: questionAnswer.photo.caption || "" })
+            });
             return true;
         }
     }
