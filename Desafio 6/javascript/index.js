@@ -15,7 +15,9 @@ if (token === 'YOUR ACCESS TOKEN HERE') {
 const bot = new TelegramBot(token, {polling: true});
 
 bot.onText(/\/help/, async (msg) => {
-	bot.sendMessage(msg.chat.id, "Comandos:\n/jokempo - Inicia o jogo Pedra, Papel e Tesoura contra o bot.\n\nCódigo fonte: https://github.com/magrinibruna/desafios-quarentena/tree/master/Desafio 6");
+	bot.sendMessage(msg.chat.id, 
+		"Bot realizado no Desafio da Quarentena do USPCodeLab Sanca.\n\nComandos:\n/jokempo - Inicia o jogo Pedra, Papel e Tesoura contra o bot.\n/help - Envia essa mensagem.\n\nO código fonte está disponível no GitHub e pode ser acessado <a href='https://github.com/magrinibruna/desafios-quarentena/tree/master/Desafio 6'>aqui</a>.",
+		{parse_mode: "HTML"});
 })
 
 // Listen for any kind of message. There are different kinds of messages.
