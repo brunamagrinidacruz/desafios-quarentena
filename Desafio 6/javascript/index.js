@@ -2,6 +2,7 @@ process.env.NTBA_FIX_319 = true; // Silences an annoying error message.
 const TelegramBot = require('node-telegram-bot-api');
 const jokempo = require('./jokempo');
 const randomPhrases = require('./random-phrases');
+const guessNumber = require('./guess-number');
 
 // replace the value below with the Telegram token you receive from @BotFather
 const token = require('./token');
@@ -14,23 +15,27 @@ if (token === 'YOUR ACCESS TOKEN HERE') {
 // Create a bot that uses 'polling' to fetch new updates
 const bot = new TelegramBot(token, {polling: true});
 
+/**
+ * Listen to the /help command. 
+ * When a user calls this command, a message explain about the bot will be sended.
+ */
 bot.onText(/\/help/, async (msg) => {
 	bot.sendMessage(msg.chat.id, 
-		"Bot realizado no Desafio da Quarentena do USPCodeLab Sanca.\n\nComandos:\n/jokempo - Inicia o jogo Pedra, Papel e Tesoura contra o bot.\n/help - Envia essa mensagem.\n\nO código fonte está disponível no GitHub e pode ser acessado <a href='https://github.com/magrinibruna/desafios-quarentena/tree/master/Desafio 6'>aqui</a>.",
-		{parse_mode: "HTML"});
+		"Bot realizado no Desafio da Quarentena do USPCodeLab Sanca.\n\nComandos:\n/jokempo - Inicia o jogo Pedra, Papel e Tesoura contra o bot.\n/number - Inicia um jogo de adivinhação de um número gerado pelo bot.\n/help - Envia essa mensagem.\n\nO código fonte está disponível no GitHub e pode ser acessado <a href='https://github.com/magrinibruna/desafios-quarentena/tree/master/Desafio 6'>aqui</a>.",
+		{parse_mode: "HTML"}); /*!< Sending in HTML mode */
 })
 
 // Listen for any kind of message. There are different kinds of messages.
-bot.onText(/\/start/, async (msg) => {
+bot.on('message', async (msg) => {
 	const chatMessage = msg.text.trim().toLowerCase();
 	const chatId = msg.chat.id;
-	if (chatMessage.startsWith('ola') || chatMessage.startsWith('oi')) {
-		bot.sendMessage(chatId, 'Olá! Como vai o seu dia?');
-	} else if (jokempo.main(bot, chatId, chatMessage)) {
+
+	if (jokempo.main(bot, chatId, chatMessage)) 
 		return;
-	} else {
+	else if(guessNumber.main(bot, chatId, chatMessage)) 
+		return;
+	else 
 		randomPhrases.writeRandomPhrase(bot, chatId);
-	}
 });
 
 console.log('Fetching data...');
