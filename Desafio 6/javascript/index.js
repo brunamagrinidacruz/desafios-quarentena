@@ -5,8 +5,7 @@ const randomPhrases = require('./random-phrases');
 const guessNumber = require('./guess-number');
 const answerQuestions = require('./answer-questions');
 
-// Token from @BotFather
-const token = require('./token');
+const token = process.env.TOKEN || require('./token');
 
 // Create a bot that uses 'polling' to fetch new updates
 const bot = new TelegramBot(token, {polling: true});
