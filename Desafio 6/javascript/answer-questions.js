@@ -1,7 +1,11 @@
 const questionsAndAnswers = [
     {
         question: "quem é o autor?",
-        answer: "A autorA é a Bruna Magrini."
+        answer: "A autorA é a Bruna Magrini.",
+        photo: {
+            link: "https://media-exp1.licdn.com/dms/image/C4E03AQGtsI00xXwRxg/profile-displayphoto-shrink_200_200/0?e=1597881600&v=beta&t=829fxtnHxAIkHxyWG3fshoAIcDAUsSnyo7rM8Ypa2ec",
+            caption: "Essa lindeza aqui o/"
+        }
     },
     {
         question: "qual o grupo de extensão mais legal?",
@@ -21,8 +25,11 @@ const questionsAndAnswers = [
 */
 function answer(bot, chatId, message) {
     for(let i in questionsAndAnswers) {
-        if(message == questionsAndAnswers[i].question) {
-            bot.sendMessage(chatId, questionsAndAnswers[i].answer);
+        let questionAnswer = questionsAndAnswers[i];
+        if(message == questionAnswer.question) {
+            bot.sendMessage(chatId, questionAnswer.answer);
+            if(questionAnswer.photo)
+                bot.sendPhoto(chatId, questionAnswer.photo.link, { caption: questionAnswer.photo.caption || "" })
             return true;
         }
     }
