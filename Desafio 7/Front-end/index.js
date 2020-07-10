@@ -143,10 +143,10 @@ becomeNewUser.addEventListener('click', (event) => {
 	}
 
 	renderedMessages.forEach(message => {
-		/*!< IF the message was sended by the user, should be update because the user has new properties now */
+		/*!< If the message was sended by the user, should be update because the user has new properties now */
 		if(message.sender.name == myself.name) {
 			const messageContainerElement = document.getElementById(message.id);
-			messageContainerElement.style.marginLeft = ''; /*!< Sending the messages to the right side of screen */
+			messageContainerElement.style.marginLeft = ''; /*!< Sending the messages to the left side of screen */
 		}
 	})
 
