@@ -1,4 +1,4 @@
-const serverAddress = 'http://localhost:8080';
+const serverAddress = 'http://localhost:8081';
 const messageFormElement = document.getElementById('message-form');
 const messagesContainerElem = document.getElementById('messages-container');
 const messageTemplateElem = document.getElementById('message-template');
@@ -6,6 +6,7 @@ const messageTemplateElem = document.getElementById('message-template');
 /**
 * @typedef {{
 	text: string,
+	time: string,
 	sender: { name: string, color: string },
 }} Message This is the type a message
 * should assume. */
@@ -17,21 +18,11 @@ const messageTemplateElem = document.getElementById('message-template');
 */
 const renderedMessages = [];
 
-/*
-* This is an IIFE (Immediatly involked function expression). An IIFE is a function
-* that is called immediatly after it's declaration, without really storing it into
-* a variable. This pattern is commonly used in JavaScript to allow for "scoped"
-* functions (functions that are only visible inside the scope), or to group logic
-* into a single scope.
-* Learn more about IIFE here:
-* https://developer.mozilla.org/en-US/docs/Glossary/IIFE
-*/
-const myself = (() => {
-	/** @argument { any[] } arr */
-	function randomItemFromArray (arr) {
-		return arr[Math.floor(Math.random() * arr.length)];
-	}
-
+/** @argument { any[] } arr */
+function randomItemFromArray (arr) {
+	return arr[Math.floor(Math.random() * arr.length)];
+}
+let myself = (() => {
 	// This part is to store the "self" into the localstorage. This is to allow for
 	// the user to come back as themselves later.
 	const myself = localStorage.getItem('self-info');
@@ -55,7 +46,13 @@ messageFormElement.addEventListener('submit', event => {
 	const messageElement = messageFormElement.querySelector('input[name=message-value]');
 	const messageText = messageElement.value;
 	if (!messageText) return;
-	const message = { text: messageText, sender: myself };
+
+	const date = new Date();
+	const message = { 
+		text: messageText, 
+		time: `${date.getDate() < 10 ? "0" + date.getDate() : date.getDate()}/${date.getMonth()+1 < 10 ? "0" + (date.getMonth()+1) : date.getMonth()+1}/${date.getFullYear()} - ${date.getHours()}:${date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes()}:${date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds()}`, 
+		sender: myself 
+	};
 	sendMessageToServer(message);
 
 	// Clears the message text input
@@ -67,7 +64,7 @@ messageFormElement.addEventListener('submit', event => {
 */
 async function sendMessageToServer (message) {
 	try {
-		await fetch(`${serverAddress}/messages`, {
+		const response = await fetch(`${serverAddress}/messages`, {
 			body: JSON.stringify(message),
 			headers: { 'Content-Type': 'application/json' },
 			method: 'POST',
@@ -79,16 +76,20 @@ async function sendMessageToServer (message) {
 
 /**
 * @argument { Message } message
+* @argument { int } index
 */
 function createMessageOnUI (message) {
 	const messageNode = messageTemplateElem.content.cloneNode(true);
 	const messageContainerElement = messageNode.querySelector('.message-container');
 	const messageNameElement = messageNode.querySelector('.message-name');
 	const messageTextElement = messageNode.querySelector('.message-text');
+	const messageTimeElement = messageNode.querySelector('.message-time');
 
+	messageContainerElement.setAttribute("id", message.id);
 	messageNameElement.innerText = message.sender.name;
 	messageNameElement.style.color = message.sender.color;
 	messageTextElement.innerText = message.text;
+	messageTimeElement.innerText = message.time;
 
 	// If I was the sender, push the message element to the right
 	if (message.sender.name === myself.name) {
@@ -100,7 +101,7 @@ function createMessageOnUI (message) {
 
 async function fetchMessagesFromServer () {
 	/** @type { Message[] } */
-	let data;
+	let data = [];
 	try {
 		// Note that, by deafault, the `fetch` function makes uses a `GET` request method.
 		const resp = await fetch(`${serverAddress}/messages`);
@@ -126,3 +127,31 @@ async function fetchMessagesFromServer () {
 }
 
 setInterval(fetchMessagesFromServer, 500);
+
+/**
+ * Function executed when user click in 'Become a new user' 
+ * The function will create a new name and a new color to the user (update the user).  
+ * It will update the localStorage and the myself variable.
+ * It will update the position of the older messages in the screen.
+ **/
+becomeNewUser.addEventListener('click', (event) => {
+	event.preventDefault();
+	/*!< Creating new random values */
+	const newMyself = { 
+		name: `${randomItemFromArray(adjectives)} ${randomItemFromArray(animals)}`,
+		color: randomItemFromArray(colors),
+	}
+
+	renderedMessages.forEach(message => {
+		/*!< IF the message was sended by the user, should be update because the user has new properties now */
+		if(message.sender.name == myself.name) {
+			const messageContainerElement = document.getElementById(message.id);
+			messageContainerElement.style.marginLeft = ''; /*!< Sending the messages to the right side of screen */
+		}
+	})
+
+	/*!< Updating the localStorage */
+	localStorage.setItem('self-info', JSON.stringify(newMyself));
+	/*!< Updating the new properties in the code */
+	myself = newMyself
+})

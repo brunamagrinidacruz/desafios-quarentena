@@ -15,6 +15,7 @@ app.get('/messages', (req, res) => {
 });
 
 app.post('/messages', (req, res) => {
+	req.body.id = messages.length + 1; /*!< Set a id to the message */
 	messages.push(req.body);
 	res.send({});
 });
