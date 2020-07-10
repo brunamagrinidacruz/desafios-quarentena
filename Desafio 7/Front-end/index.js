@@ -1,4 +1,4 @@
-const serverAddress = 'http://localhost:8081';
+const serverAddress = 'http://localhost:8080';
 const messageFormElement = document.getElementById('message-form');
 const messagesContainerElem = document.getElementById('messages-container');
 const messageTemplateElem = document.getElementById('message-template');
