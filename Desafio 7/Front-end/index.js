@@ -18,24 +18,27 @@ const messageTemplateElem = document.getElementById('message-template');
 */
 const renderedMessages = [];
 
-/** @argument { any[] } arr */
-function randomItemFromArray (arr) {
-	return arr[Math.floor(Math.random() * arr.length)];
-}
-let myself = (() => {
+let myself;
+(async () => {
 	// This part is to store the "self" into the localstorage. This is to allow for
 	// the user to come back as themselves later.
-	const myself = localStorage.getItem('self-info');
-	if (myself) return JSON.parse(myself);
-
-	const newMyself = {
-		name: `${randomItemFromArray(adjectives)} ${randomItemFromArray(animals)}`,
-		color: randomItemFromArray(colors),
+	const currentMyself = localStorage.getItem('self-info');
+	if (currentMyself) {
+		myself = JSON.parse(currentMyself);
+		return;
 	}
 
-	localStorage.setItem('self-info', JSON.stringify(newMyself));
+	/*!< Getting from the server the new users informations */
+	try {
+		const response = await fetch(`${serverAddress}/user`, {
+			headers: { 'Content-Type': 'application/json' },
+		})
+		myself = await response.json();
+		localStorage.setItem('self-info', JSON.stringify(myself));
+	} catch (e) {
+		console.error(e);
+	}
 
-	return newMyself;
 })();
 
 // Function executed when the user "sends" the message
@@ -100,6 +103,8 @@ function createMessageOnUI (message) {
 }
 
 async function fetchMessagesFromServer () {
+	if(!myself) return;
+
 	/** @type { Message[] } */
 	let data = [];
 	try {
@@ -134,24 +139,27 @@ setInterval(fetchMessagesFromServer, 500);
  * It will update the localStorage and the myself variable.
  * It will update the position of the older messages in the screen.
  **/
-becomeNewUser.addEventListener('click', (event) => {
+becomeNewUser.addEventListener('click', async (event) => {
 	event.preventDefault();
-	/*!< Creating new random values */
-	const newMyself = { 
-		name: `${randomItemFromArray(adjectives)} ${randomItemFromArray(animals)}`,
-		color: randomItemFromArray(colors),
+	/*!< Getting new random values */
+	let newMyself;
+	try {
+		const response = await fetch(`${serverAddress}/user`, {
+			headers: { 'Content-Type': 'application/json' },
+		})
+		newMyself = await response.json();
+		renderedMessages.forEach(message => {
+			/*!< If the message was sended by the user, should be update because the user has new properties now */
+			if(message.sender.name == myself.name) {
+				const messageContainerElement = document.getElementById(message.id);
+				messageContainerElement.style.marginLeft = ''; /*!< Sending the messages to the left side of screen */
+			}
+		})
+		/*!< Updating the localStorage */
+		localStorage.setItem('self-info', JSON.stringify(newMyself));
+		/*!< Updating the new properties in the code */
+		myself = newMyself
+	} catch (e) {
+		console.error(e);
 	}
-
-	renderedMessages.forEach(message => {
-		/*!< If the message was sended by the user, should be update because the user has new properties now */
-		if(message.sender.name == myself.name) {
-			const messageContainerElement = document.getElementById(message.id);
-			messageContainerElement.style.marginLeft = ''; /*!< Sending the messages to the left side of screen */
-		}
-	})
-
-	/*!< Updating the localStorage */
-	localStorage.setItem('self-info', JSON.stringify(newMyself));
-	/*!< Updating the new properties in the code */
-	myself = newMyself
 })

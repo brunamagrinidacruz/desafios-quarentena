@@ -1,4 +1,4 @@
-const colors = [
+module.exports = [
 	'black',
 	'gray',
 	'maroon',
