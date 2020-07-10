@@ -68,8 +68,6 @@ messagesString.forEach((messageString) => {
 	}
 })
 
-console.log(dictionaryColors)
-
 app.use(cors());
 app.use(express.json());
 
